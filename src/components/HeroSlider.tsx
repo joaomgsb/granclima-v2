@@ -8,7 +8,7 @@ const HeroSlider = () => {
   const slides = [
     {
       id: 2,
-      title: 'ROTO 140 CONFORTO',
+      title: 'ROTO 140 CONFORT',
       subtitle: 'Climatizador Evaporativo de Alto Desempenho',
       image: '/images/produtos/roto-140-confort.webp',
       buttonText: 'SOLICITAR ORÇAMENTO',
@@ -24,7 +24,7 @@ const HeroSlider = () => {
     },
     {
       id: 1,
-      title: 'ROTO 100 CONFORTO',
+      title: 'ROTO 100 CONFORT',
       subtitle: 'Climatizador Evaporativo com Tecnologia Touch',
       image: '/images/produtos/roto100.webp',
       buttonText: 'SOLICITAR ORÇAMENTO',

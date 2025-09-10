@@ -7,7 +7,7 @@ const Header = () => {
   const location = useLocation();
 
   const menuItems = [
-    { name: 'Lar', path: '/' },
+    { name: 'Home', path: '/' },
     { name: 'Produtos', path: '/produtos' },
     { name: 'Projetos', path: '/projetos' },
     { name: 'Serviços', path: '/servicos' },
