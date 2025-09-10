@@ -38,16 +38,9 @@ const Projetos = () => {
       descricao: 'Solução de climatização para ambiente comercial, garantindo conforto para clientes e funcionários.',
       ano: '2023'
     },
+
     {
       id: 5,
-      nome: 'PS DO BRASIL',
-      imagem: '/images/projetos/ps.jpg',
-      categoria: 'Industrial',
-      descricao: 'Projeto de climatização e ventilação para indústria de portas e portões automatizados.',
-      ano: '2023'
-    },
-    {
-      id: 6,
       nome: 'BARBEARIA',
       imagem: '/images/projetos/barbearia.jpg',
       categoria: 'Comercial',
@@ -55,7 +48,7 @@ const Projetos = () => {
       ano: '2023'
     },
     {
-      id: 7,
+      id: 6,
       nome: 'MERCADO',
       imagem: '/images/projetos/mercado.jpg',
       categoria: 'Comercial',
@@ -63,7 +56,7 @@ const Projetos = () => {
       ano: '2023'
     },
     {
-      id: 8,
+      id: 7,
       nome: 'RESTAURANTE',
       imagem: '/images/projetos/restaurante.jpg',
       categoria: 'Comercial',

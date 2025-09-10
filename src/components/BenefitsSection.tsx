@@ -38,7 +38,7 @@ const BenefitsSection = () => {
     {
       icon: Leaf,
       title: 'Sustentável',
-      description: 'Processo 100% natural usando apenas água e ar, sem gases refrigerantes nocivos ao meio ambiente.'
+      description: 'Processo 100% natural usando apenas água e ar, sem emissão de gases que poluem o meio ambiente.'
     }
   ];
 

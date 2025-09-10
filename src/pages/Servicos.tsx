@@ -62,13 +62,7 @@ const Servicos = () => {
       icon: Wind,
       color: 'from-indigo-500 to-indigo-600'
     },
-    {
-      id: 8,
-      title: 'PS do Brasil',
-      description: 'Proporcione mais saúde e bem-estar para sua família com os climatizadores portáteis da Rotoplast. Através do filtro colmeia, ele remove as impurezas e odores do ambiente, deixando o ar limpo e fresco.',
-      icon: DoorOpen,
-      color: 'from-yellow-500 to-yellow-600'
-    }
+
   ];
 
   return (
