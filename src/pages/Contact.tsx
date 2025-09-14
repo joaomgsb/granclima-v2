@@ -1,7 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    topic: '',
+    message: '',
+  });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('loading');
+    setErrorMessage(null);
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string | undefined;
+
+    if (!serviceId || !templateId || !publicKey) {
+      setStatus('error');
+      setErrorMessage('Falha de configuração do EmailJS. Verifique as variáveis de ambiente.');
+      console.error('EmailJS: variáveis de ambiente ausentes.');
+      return;
+    }
+
+    const templateParams = {
+      name: formData.name,
+      company: formData.company,
+      email: formData.email,
+      phone: formData.phone,
+      topic: formData.topic,
+      message: formData.message,
+      submitted_at: new Date().toLocaleString('pt-BR'),
+      page_url: window.location.href,
+    } as const;
+
+    try {
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      setStatus('success');
+      setFormData({ name: '', email: '', phone: '', company: '', topic: '', message: '' });
+    } catch (err) {
+      setStatus('error');
+      setErrorMessage('Não foi possível enviar sua mensagem. Tente novamente.');
+      console.error('EmailJS error:', err);
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Header Section */}
@@ -28,7 +85,18 @@ const Contact = () => {
                 Envie sua <span className="text-yellow-500">mensagem</span>
               </h2>
               
-              <form id="contact-form" className="space-y-6">
+              <form id="contact-form" onSubmit={handleSubmit} className="space-y-6">
+                {status === 'success' && (
+                  <div className="p-4 rounded-lg bg-green-50 border border-green-200 text-green-800">
+                    Mensagem enviada com sucesso! Em breve entraremos em contato.
+                  </div>
+                )}
+                {status === 'error' && (
+                  <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-800">
+                    {errorMessage}
+                  </div>
+                )}
+
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -36,6 +104,9 @@ const Contact = () => {
                     </label>
                     <input
                       type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
                       placeholder="Seu nome completo"
@@ -47,6 +118,9 @@ const Contact = () => {
                     </label>
                     <input
                       type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
                       placeholder="seu@email.com"
@@ -61,6 +135,9 @@ const Contact = () => {
                     </label>
                     <input
                       type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
                       placeholder="(11) 99999-9999"
@@ -72,6 +149,9 @@ const Contact = () => {
                     </label>
                     <input
                       type="text"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
                       placeholder="Nome da empresa"
                     />
@@ -83,6 +163,9 @@ const Contact = () => {
                     Assunto *
                   </label>
                   <select 
+                    name="topic"
+                    value={formData.topic}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
                   >
@@ -101,6 +184,9 @@ const Contact = () => {
                     Mensagem *
                   </label>
                   <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
                     required
                     rows={6}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
@@ -110,10 +196,11 @@ const Contact = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-4 px-6 rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl flex items-center justify-center space-x-2"
+                  disabled={status === 'loading'}
+                  className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-4 px-6 rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   <Send size={20} />
-                  <span>ENVIAR MENSAGEM</span>
+                  <span>{status === 'loading' ? 'ENVIANDO...' : 'ENVIAR MENSAGEM'}</span>
                 </button>
               </form>
             </div>
